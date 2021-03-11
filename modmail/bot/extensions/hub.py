@@ -6,6 +6,8 @@ from modmail import Config
 
 
 class Hub(commands.Cog):
+    __slots__ = ("bot", "guild", "commands", "stdout")
+
     def __init__(self, bot: modmail.bot.Bot) -> None:
         self.bot = bot
 

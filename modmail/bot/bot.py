@@ -51,9 +51,3 @@ class Bot(commands.Bot):
         await self.change_presence(activity=discord.Activity(name="DM reports", type=discord.ActivityType.listening))
         self.ready = True
         print(f" Bot ready.")
-
-    async def on_message(self, message: discord.Message) -> None:
-        if message.author.bot or not isinstance(message.channel, discord.DMChannel):
-            return
-
-        print(message.content)
