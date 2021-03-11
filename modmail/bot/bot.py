@@ -10,13 +10,12 @@ from modmail import Config
 
 
 class Bot(commands.Bot):
-    __slots__ = ("ready", "extensions", "scheduler")
+    __slots__ = ("extensions", "scheduler")
 
     def __init__(self) -> None:
-        self.ready = False
         self.extensions = [p.stem for p in Path(".").glob("./modmail/bot/extensions/*.py")]
         self.scheduler = AsyncIOScheduler()
-        self.scheduler.config(timezone=utc)
+        self.scheduler.configure(timezone=utc)
 
         super().__init__(
             command_prefix=Config.PREFIX,
@@ -58,5 +57,5 @@ class Bot(commands.Bot):
         await self.change_presence(activity=discord.Activity(name="DM reports", type=discord.ActivityType.listening))
         print(f" Presence set.")
 
-        self.ready = True
+        self.guild = self.get_guild(Config.GUILD_ID)
         print(f" Bot ready.")

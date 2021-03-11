@@ -13,9 +13,6 @@ class Hub(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
-        if not self.bot.ready:
-            return
-
         self.guild = self.bot.get_guild(Config.HUB_GUILD_ID)
         if self.guild:
             self.commands = self.guild.get_channel(Config.HUB_COMMANDS_ID)
