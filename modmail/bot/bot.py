@@ -1,18 +1,22 @@
 from pathlib import Path
 
 import discord
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from discord.ext import commands
+from pytz import utc
 
 import modmail
 from modmail import Config
 
 
 class Bot(commands.Bot):
-    __slots__ = ("ready", "extensions")
+    __slots__ = ("ready", "extensions", "scheduler")
 
     def __init__(self) -> None:
         self.ready = False
         self.extensions = [p.stem for p in Path(".").glob("./modmail/bot/extensions/*.py")]
+        self.scheduler = AsyncIOScheduler()
+        self.scheduler.config(timezone=utc)
 
         super().__init__(
             command_prefix=Config.PREFIX,
@@ -48,6 +52,11 @@ class Bot(commands.Bot):
         print(f" Bot disconnected.")
 
     async def on_ready(self) -> None:
+        self.scheduler.start()
+        print(f" Scheduler started ({len(self.scheduler.get_jobs())} jobs scheduled).")
+
         await self.change_presence(activity=discord.Activity(name="DM reports", type=discord.ActivityType.listening))
+        print(f" Presence set.")
+
         self.ready = True
         print(f" Bot ready.")
