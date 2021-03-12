@@ -59,3 +59,19 @@ class Bot(commands.Bot):
 
         self.guild = self.get_guild(Config.GUILD_ID)
         print(f" Bot ready.")
+
+    async def on_message(self, message: discord.Message) -> None:
+        if message.guild and message.guild.me in message.mentions:
+            await message.delete()
+            try:
+                await message.author.send(
+                    f"Hey {message.author.name}! This bot is only for discrete reporting in DMs, and thus has no server functionality."
+                )
+            except discord.Forbidden:
+                await message.author.send(
+                    f"Hey {message.author.name}! This bot is only for discrete reporting in DMs, and thus has no server functionality.",
+                    delete_after=10,
+                )
+
+    async def process_commands(self, message) -> None:
+        pass
