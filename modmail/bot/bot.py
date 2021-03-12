@@ -54,7 +54,7 @@ class Bot(commands.Bot):
         self.scheduler.start()
         print(f" Scheduler started ({len(self.scheduler.get_jobs())} jobs scheduled).")
 
-        await self.change_presence(activity=discord.Activity(name="DM reports", type=discord.ActivityType.listening))
+        await self.change_presence(activity=discord.Activity(name=f"DM reports • Version {modmail.__version__}", type=discord.ActivityType.listening))
         print(f" Presence set.")
 
         self.guild = self.get_guild(Config.GUILD_ID)
