@@ -68,7 +68,7 @@ class Bot(commands.Bot):
                     f"Hey {message.author.name}! This bot is only for discrete reporting in DMs, and thus has no server functionality."
                 )
             except discord.Forbidden:
-                await message.author.send(
+                await message.channel.send(
                     f"Hey {message.author.name}! This bot is only for discrete reporting in DMs, and thus has no server functionality.",
                     delete_after=10,
                 )
