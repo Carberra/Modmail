@@ -62,6 +62,10 @@ class Bot(commands.Bot):
 
     async def on_message(self, message: discord.Message) -> None:
         if message.guild and message.guild.me in message.mentions:
+            member = self.guild.get_member(message.author.id)
+            if Config.STAFF_ROLE_ID in [role.id for role in member.roles]:
+                return
+
             await message.delete()
             try:
                 await message.author.send(
