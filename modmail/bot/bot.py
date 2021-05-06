@@ -54,16 +54,20 @@ class Bot(commands.Bot):
         self.scheduler.start()
         print(f" Scheduler started ({len(self.scheduler.get_jobs())} jobs scheduled).")
 
-        await self.change_presence(activity=discord.Activity(name=f"DM reports • Version {modmail.__version__}", type=discord.ActivityType.listening))
+        await self.change_presence(
+            activity=discord.Activity(
+                name=f"DM reports • Version {modmail.__version__}", type=discord.ActivityType.listening
+            )
+        )
         print(f" Presence set.")
 
         self.guild = self.get_guild(Config.GUILD_ID)
+        self.staff_role = self.guild.get_role(Config.STAFF_ROLE_ID)
         print(f" Bot ready.")
 
     async def on_message(self, message: discord.Message) -> None:
         if message.guild and message.guild.me in message.mentions:
-            member = self.guild.get_member(message.author.id)
-            if Config.STAFF_ROLE_ID in [role.id for role in member.roles]:
+            if self.staff_role in message.author.roles:
                 return
 
             await message.delete()
