@@ -1,4 +1,5 @@
 import datetime as dt
+import random
 import typing as t
 
 import discord
@@ -6,7 +7,7 @@ from discord.ext import commands
 
 import modmail
 from modmail import Config
-from modmail.utils import chron
+from modmail.utils import chron, string
 
 
 class Mail(commands.Cog):
@@ -27,21 +28,34 @@ class Mail(commands.Cog):
             return await message.channel.send("Your message should be between 50 and 1,000 characters long.")
 
         member = self.bot.guild.get_member(message.author.id)
-        await self.output.send(
-            embed=discord.Embed.from_dict(
+
+        fields = [
+            {"name": "Member", "value": f"{member.name} (ID: {member.id})", "inline": False},
+            {"name": "Message", "value": message.content, "inline": False},
+        ]
+
+        if message.mentions:
+            fields.append(
                 {
-                    "title": "Modmail",
-                    "color": member.colour.value,
-                    "thumbnail": {"url": f"{member.avatar_url}"},
-                    "footer": {"text": f"ID: {message.id}"},
-                    "image": {"url": att[0].url if len(att := message.attachments) else None},
-                    "fields": (
-                        {"name": "Member", "value": member.mention, "inline": False},
-                        {"name": "Message", "value": message.content, "inline": False},
-                    ),
+                    "name": "Other Mentions",
+                    "value": "\n".join((f"{m.name}: {m.id}") for m in message.mentions),
+                    "inline": False,
                 }
             )
-        )
+
+        struc = {
+            "title": "Modmail",
+            "color": random.randint(0x0, 0xFFFFFF),
+            "thumbnail": {"url": f"{member.avatar_url}"},
+            "footer": {"text": f"ID: {message.id}"},
+            "image": {"url": att[0].url if len(att := message.attachments) else None},
+            "fields": fields,
+        }
+
+        embed = discord.Embed.from_dict(struc)
+
+        await self.output.send(embed=embed)
+
         await message.channel.send(
             "Message sent. If needed, a moderator will DM you regarding this issue. You'll need to wait 1 hour before sending another modmail."
         )
