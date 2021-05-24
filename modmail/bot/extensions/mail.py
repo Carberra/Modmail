@@ -1,5 +1,4 @@
 import datetime as dt
-import random
 import typing as t
 
 import discord
@@ -7,7 +6,7 @@ from discord.ext import commands
 
 import modmail
 from modmail import Config
-from modmail.utils import chron, string
+from modmail.utils import chron
 
 
 class Mail(commands.Cog):
@@ -45,7 +44,7 @@ class Mail(commands.Cog):
 
         struc = {
             "title": "Modmail",
-            "color": random.randint(0x0, 0xFFFFFF),
+            "color": discord.Colour.random().value,
             "thumbnail": {"url": f"{member.avatar_url}"},
             "footer": {"text": f"ID: {message.id}"},
             "image": {"url": att[0].url if len(att := message.attachments) else None},
