@@ -1,4 +1,5 @@
 import datetime as dt
+import random
 import typing as t
 
 import discord
@@ -6,7 +7,7 @@ from discord.ext import commands
 
 import modmail
 from modmail import Config
-from modmail.utils import chron
+from modmail.utils import chron, string
 
 
 class Mail(commands.Cog):

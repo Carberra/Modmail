@@ -1,4 +1,4 @@
 from .config import Config
 from .bot import Bot
 
-__version__ = "0.1.2"
+__version__ = "0.2.0"
