@@ -7,7 +7,7 @@ ORDINAL_ENDINGS = {"1": "st", "2": "nd", "3": "rd"}
 
 def list_of(items: list, sep: t.Optional[str] = "and") -> str:
     if len(items) > 2:
-        return "{}, {} {}".format(", ".join(items[:-1]), sep, items[-1])
+        return f"{', '.join(items[:-1])}, {sep} {items[-1]}"
     else:
         return f" {sep} ".join(items)
 

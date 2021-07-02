@@ -45,7 +45,7 @@ class Mail(commands.Cog):
 
         struc = {
             "title": "Modmail",
-            "color": random.randint(0x0, 0xFFFFFF),
+            "color": discord.Colour.random().value,
             "thumbnail": {"url": f"{member.avatar_url}"},
             "footer": {"text": f"ID: {message.id}"},
             "image": {"url": att[0].url if len(att := message.attachments) else None},
