@@ -1,5 +1,6 @@
 import datetime as dt
 import random
+import re
 import typing as t
 
 import discord
@@ -34,11 +35,20 @@ class Mail(commands.Cog):
             {"name": "Message", "value": message.content, "inline": False},
         ]
 
-        if message.mentions:
+        mentions = []
+        for uid in re.findall(r"<@!?(\d{18})>", message.content):
+            if user := self.bot.get_user(int(uid)):
+                mentions.append(f"@{user.name}: {user.id}")
+
+        for cid in re.findall(r"<#(\d{18})>", message.content):
+            if chan := self.bot.get_channel(int(cid)):
+                mentions.append(f"#{chan.name}: {chan.id}")
+
+        if mentions:
             fields.append(
                 {
                     "name": "Other Mentions",
-                    "value": "\n".join((f"{m.name}: {m.id}") for m in message.mentions),
+                    "value": "\n".join(mentions),
                     "inline": False,
                 }
             )
