@@ -36,11 +36,11 @@ class Mail(commands.Cog):
         ]
 
         mentions = []
-        for uid in re.findall(r"<@!?(\d{18})>", message.content):
+        for uid in re.findall(r"<@!?(\d+)>", message.content):
             if user := self.bot.get_user(int(uid)):
                 mentions.append(f"@{user.name}: {user.id}")
 
-        for cid in re.findall(r"<#(\d{18})>", message.content):
+        for cid in re.findall(r"<#(\d+)>", message.content):
             if chan := self.bot.get_channel(int(cid)):
                 mentions.append(f"#{chan.name}: {chan.id}")
 
