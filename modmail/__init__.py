@@ -41,5 +41,4 @@ __license__ = "BSD-3-Clause"
 __bugtracker__ = "https://github.com/Carberra/Modmail/issues"
 __ci__ = "https://github.com/Carberra/Modmail/actions"
 
-DEFAULT_EMBED_COLOUR = 0xE33939
 ROOT_DIR = Path(__file__).parent
