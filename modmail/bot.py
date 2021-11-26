@@ -26,20 +26,65 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-__all__ = ("Config",)
+import logging
+import os
 
-from pathlib import Path
+import hikari
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from lightbulb.app import BotApp
+from pytz import utc
 
-from .config import Config
+import modmail
+from modmail import Config
 
-__productname__ = "Modmail"
-__version__ = "1.0.0"
-__description__ = "The modmail bot for the Carberra Tutorials Discord server."
-__url__ = "https://github.com/Carberra/Modmail"
-__author__ = "Ethan Henderson"
-__license__ = "BSD-3-Clause"
-__bugtracker__ = "https://github.com/Carberra/Modmail/issues"
-__ci__ = "https://github.com/Carberra/Modmail/actions"
+log = logging.getLogger(__name__)
 
-DEFAULT_EMBED_COLOUR = 0xE33939
-ROOT_DIR = Path(__file__).parent
+bot = BotApp(
+    Config.TOKEN,
+    prefix=Config.PREFIX,
+    default_enabled_guilds=Config.GUILD_ID,
+    case_insensitive_prefix_commands=True,
+    intents=hikari.Intents.ALL,
+)
+
+bot.d.scheduler = AsyncIOScheduler()
+bot.d.scheduler.configure(timezone=utc)
+
+bot.load_extensions_from("./modmail/extensions")
+
+
+@bot.listen(hikari.StartingEvent)
+async def on_starting(event: hikari.StartingEvent) -> None:
+    bot.d.scheduler.start()
+
+
+@bot.listen(hikari.StartedEvent)
+async def on_started(event: hikari.StartedEvent) -> None:
+    await bot.rest.create_message(
+        Config.STDOUT_CHANNEL_ID,
+        f"Modmail is now online! (Version {modmail.__version__})",
+    )
+
+
+@bot.listen(hikari.StoppingEvent)
+async def on_stopping(event: hikari.StoppingEvent) -> None:
+    bot.d.scheduler.shutdown()
+
+    await bot.rest.create_message(
+        Config.STDOUT_CHANNEL_ID,
+        f"Modmail is shutting down. (Version {modmail.__version__})",
+    )
+
+
+def run() -> None:
+    if os.name != "nt":
+        import uvloop
+
+        uvloop.install()
+
+    bot.run(
+        activity=hikari.Activity(
+            name="for DM reports",
+            type=hikari.ActivityType.LISTENING,
+        )
+    )

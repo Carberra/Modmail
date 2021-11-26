@@ -26,20 +26,31 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-__all__ = ("Config",)
+import random
 
-from pathlib import Path
 
-from .config import Config
-
-__productname__ = "Modmail"
-__version__ = "1.0.0"
-__description__ = "The modmail bot for the Carberra Tutorials Discord server."
-__url__ = "https://github.com/Carberra/Modmail"
-__author__ = "Ethan Henderson"
-__license__ = "BSD-3-Clause"
-__bugtracker__ = "https://github.com/Carberra/Modmail/issues"
-__ci__ = "https://github.com/Carberra/Modmail/actions"
-
-DEFAULT_EMBED_COLOUR = 0xE33939
-ROOT_DIR = Path(__file__).parent
+def choose_colour() -> int:
+    return random.choice(
+        (
+            0x1ABC9C,
+            0x11806A,
+            0x2ECC71,
+            0x1F8B4C,
+            0x3498DB,
+            0x206694,
+            0x9B59B6,
+            0x71368A,
+            0xE91E63,
+            0xAD1457,
+            0xF1C40F,
+            0xC27C0E,
+            0xE67E22,
+            0xA84300,
+            0xE74C3C,
+            0x992D22,
+            # 0x95a5a6,
+            # 0x979c9f,
+            # 0x607d8b,
+            # 0x546e7a,
+        )
+    )

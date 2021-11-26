@@ -25,21 +25,3 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-__all__ = ("Config",)
-
-from pathlib import Path
-
-from .config import Config
-
-__productname__ = "Modmail"
-__version__ = "1.0.0"
-__description__ = "The modmail bot for the Carberra Tutorials Discord server."
-__url__ = "https://github.com/Carberra/Modmail"
-__author__ = "Ethan Henderson"
-__license__ = "BSD-3-Clause"
-__bugtracker__ = "https://github.com/Carberra/Modmail/issues"
-__ci__ = "https://github.com/Carberra/Modmail/actions"
-
-DEFAULT_EMBED_COLOUR = 0xE33939
-ROOT_DIR = Path(__file__).parent
