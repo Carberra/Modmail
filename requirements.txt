@@ -4,4 +4,4 @@ hikari-lightbulb<3,>=2.0
 psutil<6,>=5.8
 pygount<2,>=1.2
 python-dotenv~=0.19
-uvloop~=0.16; sys_platform != "nt"
+uvloop~=0.16; os_name != "nt"
