@@ -30,8 +30,8 @@ import logging
 import os
 
 import hikari
-import lightbulb
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from lightbulb import errors, events
 from lightbulb.app import BotApp
 from pytz import utc
 
@@ -76,11 +76,11 @@ async def on_stopping(event: hikari.StoppingEvent) -> None:
     )
 
 
-@bot.listen(lightbulb.CommandErrorEvent)
-async def on_command_error(event: lightbulb.CommandErrorEvent) -> None:
+@bot.listen(events.CommandErrorEvent)
+async def on_command_error(event: events.CommandErrorEvent) -> None:
     exc = getattr(event.exception, "__cause__", event.exception)
 
-    if isinstance(exc, lightbulb.NotOwner):
+    if isinstance(exc, errors.NotOwner):
         await event.context.respond("You need to be an owner to do that.")
         return
 
