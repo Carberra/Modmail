@@ -30,6 +30,7 @@ import logging
 import os
 
 import hikari
+import lightbulb
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from lightbulb.app import BotApp
 from pytz import utc
@@ -73,6 +74,20 @@ async def on_stopping(event: hikari.StoppingEvent) -> None:
         Config.STDOUT_CHANNEL_ID,
         f"Modmail is shutting down. (Version {modmail.__version__})",
     )
+
+
+@bot.listen(lightbulb.CommandErrorEvent)
+async def on_command_error(event: lightbulb.CommandErrorEvent) -> None:
+    exc = getattr(event.exception, "__cause__", event.exception)
+
+    if isinstance(exc, lightbulb.NotOwner):
+        await event.context.respond("You need to be an owner to do that.")
+        return
+
+    await event.context.respond(
+        "Something went wrong. Open an issue on the GitHub repository."
+    )
+    raise event.exception
 
 
 def run() -> None:
