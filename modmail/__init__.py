@@ -33,7 +33,7 @@ from pathlib import Path
 from .config import Config
 
 __productname__ = "Modmail"
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 __description__ = "The modmail bot for the Carberra Tutorials Discord server."
 __url__ = "https://github.com/Carberra/Modmail"
 __author__ = "Ethan Henderson"

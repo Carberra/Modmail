@@ -84,7 +84,7 @@ def run() -> None:
 
     bot.run(
         activity=hikari.Activity(
-            name="for DM reports",
+            name=f"DM reports • Version {modmail.__version__}",
             type=hikari.ActivityType.LISTENING,
         )
     )
