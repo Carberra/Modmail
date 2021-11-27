@@ -93,9 +93,7 @@ async def cmd_about(ctx: context.base.Context) -> None:
         )
         .set_thumbnail(me.avatar_url)
         .set_author(name="Information")
-        .set_footer(
-            f"Requested by {member.display_name}", icon=member.avatar_url
-        )
+        .set_footer(f"Requested by {member.display_name}", icon=member.avatar_url)
         .add_field("Author", f"<@{385807530913169426}>")
         .add_field(
             "Contributors",
@@ -143,9 +141,7 @@ async def cmd_stats(ctx: context.base.Context) -> None:
         )
         .set_thumbnail(me.avatar_url)
         .set_author(name="Information")
-        .set_footer(
-            f"Requested by {member.display_name}", icon=member.avatar_url
-        )
+        .set_footer(f"Requested by {member.display_name}", icon=member.avatar_url)
         .add_field("Bot version", modmail.__version__, inline=True)
         .add_field("Python version", platform.python_version(), inline=True)
         .add_field("Hikari version", hikari.__version__, inline=True)
