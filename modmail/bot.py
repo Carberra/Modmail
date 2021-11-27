@@ -41,7 +41,6 @@ log = logging.getLogger(__name__)
 
 bot = BotApp(
     Config.TOKEN,
-    prefix=Config.PREFIX,
     default_enabled_guilds=Config.GUILD_ID,
     case_insensitive_prefix_commands=True,
     intents=hikari.Intents.ALL,

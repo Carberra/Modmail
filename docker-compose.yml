@@ -6,11 +6,9 @@ services:
 
     environment:
       TOKEN: file:/run/secrets/token
-      PREFIX: str:-
 
       GUILD_ID: int:626608699942764544
-
-      STDOUT_CHANNEL_ID: int:711367399399620691
+      STDOUT_CHANNEL_ID: int:914017618233548850
       MAIL_CHANNEL_ID: int:700101707727634452
 
     secrets:
