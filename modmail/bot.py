@@ -45,6 +45,9 @@ bot = BotApp(
     default_enabled_guilds=Config.GUILD_ID,
     case_insensitive_prefix_commands=True,
     intents=hikari.Intents.ALL,
+    cache_settings=hikari.CacheSettings(
+        components=hikari.CacheComponents.GUILDS | hikari.CacheComponents.MEMBERS
+    ),
 )
 
 bot.d.scheduler = AsyncIOScheduler()
