@@ -1,4 +1,4 @@
-# Copyright (c) 2020-2021, Carberra Tutorials
+# Copyright (c) 2020-present, Carberra
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -28,14 +28,15 @@
 
 from __future__ import annotations
 
+import typing as t
 from pathlib import Path
 
 import nox
 
-PROJECT_DIR = Path(__file__).parent
-PROJECT_NAME = Path(__file__).parent.stem.lower()
+PROJECT_DIR: t.Final = Path(__file__).parent
+PROJECT_NAME: t.Final = Path(__file__).parent.stem.lower()
 
-CHECK_PATHS = (
+CHECK_PATHS: t.Final = (
     str(PROJECT_DIR / PROJECT_NAME),
     str(PROJECT_DIR / "noxfile.py"),
 )
@@ -62,15 +63,15 @@ def fetch_installs(*categories: str) -> list[str]:
     return installs
 
 
-@nox.session(reuse_venv=True)  # type: ignore
-def check_formatting(session: nox.Session) -> None:
-    session.install("-U", *fetch_installs("Formatting"))
+@nox.session(reuse_venv=True)
+def formatting(session: nox.Session) -> None:
+    session.install(*fetch_installs("Formatting"))
     session.run("black", ".", "--check")
 
 
-@nox.session(reuse_venv=True)  # type: ignore
-def check_imports(session: nox.Session) -> None:
-    session.install("-U", *fetch_installs("Imports"))
+@nox.session(reuse_venv=True)
+def imports(session: nox.Session) -> None:
+    session.install(*fetch_installs("Imports"))
     # flake8 doesn't use the gitignore so we have to be explicit.
     session.run(
         "flake8",
@@ -82,23 +83,23 @@ def check_imports(session: nox.Session) -> None:
         "--extend-exclude",
         "__init__.py",
     )
-    session.run("isort", ".", "-cq")
+    session.run("isort", *CHECK_PATHS, "-cq")
 
 
-@nox.session(reuse_venv=True)  # type: ignore
-def check_typing(session: nox.Session) -> None:
-    session.install("-U", *fetch_installs("Typing"), "-r", "requirements.txt")
-    session.run("mypy", *CHECK_PATHS)
+@nox.session(reuse_venv=True)
+def typing(session: nox.Session) -> None:
+    session.install(*fetch_installs("Typing"), "-r", "requirements.txt")
+    session.run("mypy", CHECK_PATHS[0])
 
 
-@nox.session(reuse_venv=True)  # type: ignore
-def check_line_lengths(session: nox.Session) -> None:
-    session.install("-U", *fetch_installs("Line lengths"))
-    session.run("len8", *CHECK_PATHS, "-lx", "data")
+@nox.session(reuse_venv=True)
+def line_lengths(session: nox.Session) -> None:
+    session.install(*fetch_installs("Line lengths"))
+    session.run("len8", *CHECK_PATHS)
 
 
-@nox.session(reuse_venv=True)  # type: ignore
-def check_licensing(session: nox.Session) -> None:
+@nox.session(reuse_venv=True)
+def licensing(session: nox.Session) -> None:
     missing = []
 
     for p in [
@@ -106,7 +107,11 @@ def check_licensing(session: nox.Session) -> None:
         *PROJECT_DIR.glob("*.py"),
     ]:
         with open(p) as f:
-            if not f.read().startswith("# Copyright (c)"):
+            header = f.read().split("\n")[0]
+            if not (
+                header.startswith("# Copyright (c) 2020-")
+                or header.endswith(", Carberra\n")
+            ):
                 missing.append(p)
 
     if missing:
@@ -116,15 +121,27 @@ def check_licensing(session: nox.Session) -> None:
         )
 
 
-@nox.session(reuse_venv=True)  # type: ignore
-def check_spelling(session: nox.Session) -> None:
-    session.install("-U", *fetch_installs("Spelling"))
+@nox.session(reuse_venv=True)
+def spelling(session: nox.Session) -> None:
+    session.install(*fetch_installs("Spelling"))
     session.run("codespell", *CHECK_PATHS, "-L", "nd")
 
 
-@nox.session(reuse_venv=True)  # type: ignore
-def check_safety(session: nox.Session) -> None:
+@nox.session(reuse_venv=True)
+def safety(session: nox.Session) -> None:
     # Needed due to https://github.com/pypa/pip/pull/9827.
     session.install("-U", "pip")
-    session.install("-Ur", "requirements-dev.txt")
+    session.install("-r", "requirements-dev.txt")
     session.run("safety", "check", "--full-report")
+
+
+@nox.session(reuse_venv=True)
+def security(session: nox.Session) -> None:
+    session.install(*fetch_installs("Security"))
+    session.run("bandit", "-qr", CHECK_PATHS[0], "-s", "B101")
+
+
+@nox.session(reuse_venv=True)
+def dependencies(session: nox.Session) -> None:
+    session.install(*fetch_installs("Dependencies"))
+    session.run("deputil", "update", "requirements*.txt")

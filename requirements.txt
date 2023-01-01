@@ -1,5 +1,5 @@
 apscheduler<4,>=3.8
-hikari[speedups]==2.0.0.dev106
+hikari[speedups]==2.0.0.dev114
 hikari-lightbulb<3,>=2.0
 psutil<6,>=5.8
 pygount<2,>=1.2
