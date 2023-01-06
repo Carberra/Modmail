@@ -2,6 +2,9 @@
 extend-exclude = "modmail/__init__.py"
 line-length = 88
 
+[tool.len8]
+code-length = 88
+
 [tool.isort]
 profile = "black"
 

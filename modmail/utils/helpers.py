@@ -30,7 +30,7 @@ import random
 
 
 def choose_colour() -> int:
-    return random.choice(
+    return random.choice(  # nosec: B311
         (
             0x1ABC9C,
             0x11806A,
