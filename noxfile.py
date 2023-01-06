@@ -109,8 +109,7 @@ def licensing(session: nox.Session) -> None:
         with open(p) as f:
             header = f.read().split("\n")[0]
             if not (
-                header.startswith("# Copyright (c) 2020-")
-                or header.endswith(", Carberra\n")
+                header.startswith("# Copyright (c)") or header.endswith(", Carberra\n")
             ):
                 missing.append(p)
 

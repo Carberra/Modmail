@@ -26,32 +26,29 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from __future__ import annotations
+
 import logging
-import typing as t
 
-from lightbulb import checks, commands, context, decorators, plugins
+import lightbulb
 
-if t.TYPE_CHECKING:
-    from lightbulb.app import BotApp
-
+plugin = lightbulb.Plugin("Admin")
 log = logging.getLogger(__name__)
 
-plugin = plugins.Plugin("Admin")
 
-
-@plugin.command
-@decorators.add_checks(checks.owner_only)
-@decorators.command("shutdown", "Shut Modmail down.", ephemeral=True)
-@decorators.implements(commands.slash.SlashCommand)
-async def cmd_shutdown(ctx: context.base.Context) -> None:
+@plugin.command()
+@lightbulb.add_checks(lightbulb.owner_only)
+@lightbulb.command("shutdown", "Shut Modmail down.", ephemeral=True)
+@lightbulb.implements(lightbulb.SlashCommand)
+async def cmd_shutdown(ctx: lightbulb.SlashContext) -> None:
     log.info("Shutdown signal received")
     await ctx.respond("Now shutting down.")
     await ctx.bot.close()
 
 
-def load(bot: "BotApp") -> None:
+def load(bot: lightbulb.BotApp) -> None:
     bot.add_plugin(plugin)
 
 
-def unload(bot: "BotApp") -> None:
+def unload(bot: lightbulb.BotApp) -> None:
     bot.remove_plugin(plugin)

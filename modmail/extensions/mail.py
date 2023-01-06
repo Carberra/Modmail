@@ -26,21 +26,18 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from __future__ import annotations
+
 import asyncio
 import datetime as dt
-import typing as t
 
 import hikari
-from lightbulb import plugins
+import lightbulb
 
 from modmail import Config
 from modmail.utils import helpers
 
-if t.TYPE_CHECKING:
-    from lightbulb.app import BotApp
-
-
-plugin = plugins.Plugin("Mail", include_datastore=True)
+plugin = lightbulb.Plugin("Mail", include_datastore=True)
 
 
 @plugin.listener(hikari.StartedEvent)
@@ -125,9 +122,9 @@ async def on_guild_message_create(event: hikari.GuildMessageCreateEvent) -> None
     await m.delete()
 
 
-def load(bot: "BotApp") -> None:
+def load(bot: lightbulb.BotApp) -> None:
     bot.add_plugin(plugin)
 
 
-def unload(bot: "BotApp") -> None:
+def unload(bot: lightbulb.BotApp) -> None:
     bot.remove_plugin(plugin)

@@ -26,13 +26,16 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from __future__ import annotations
+
 import logging
 import os
 
 import hikari
+from hikari.impl.config import CacheSettings
+from hikari.api.config import CacheComponents
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from lightbulb import errors, events
-from lightbulb.app import BotApp
+import lightbulb
 from pytz import utc
 
 import modmail
@@ -40,13 +43,12 @@ from modmail import Config
 
 log = logging.getLogger(__name__)
 
-bot = BotApp(
+bot = lightbulb.BotApp(
     Config.TOKEN,
     default_enabled_guilds=Config.GUILD_ID,
-    case_insensitive_prefix_commands=True,
     intents=hikari.Intents.ALL,
-    cache_settings=hikari.CacheSettings(
-        components=hikari.CacheComponents.GUILDS | hikari.CacheComponents.MEMBERS
+    cache_settings=CacheSettings(
+        components=CacheComponents.GUILDS | CacheComponents.MEMBERS
     ),
 )
 
@@ -61,29 +63,16 @@ async def on_starting(event: hikari.StartingEvent) -> None:
     bot.d.scheduler.start()
 
 
-@bot.listen(hikari.StartedEvent)
-async def on_started(event: hikari.StartedEvent) -> None:
-    await bot.rest.create_message(
-        Config.STDOUT_CHANNEL_ID,
-        f"Modmail is now online! (Version {modmail.__version__})",
-    )
-
-
 @bot.listen(hikari.StoppingEvent)
 async def on_stopping(event: hikari.StoppingEvent) -> None:
     bot.d.scheduler.shutdown()
 
-    await bot.rest.create_message(
-        Config.STDOUT_CHANNEL_ID,
-        f"Modmail is shutting down. (Version {modmail.__version__})",
-    )
 
+@bot.listen(lightbulb.CommandErrorEvent)
+async def on_command_error(event: lightbulb.CommandErrorEvent) -> None:
+    exc = event.exception
 
-@bot.listen(events.CommandErrorEvent)
-async def on_command_error(event: events.CommandErrorEvent) -> None:
-    exc = getattr(event.exception, "__cause__", event.exception)
-
-    if isinstance(exc, errors.NotOwner):
+    if isinstance(exc, lightbulb.NotOwner):
         await event.context.respond("You need to be an owner to do that.")
         return
 
